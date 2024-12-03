@@ -1,11 +1,14 @@
-import { Header } from './Header'
-import { Layout } from './Layout'
+import React, { ReactNode } from "react";
+import { Header } from "./Header";
 
-export const LandingPage = () => {
-    return (
-        <>
-            <Header />
-            <Layout />
-        </>
-    )
+interface LayoutProps {
+    children: ReactNode;
 }
+
+export const LandingPage: React.FC<LayoutProps> = ({ children }) => (
+    <>
+        <Header />
+        <main>{children}</main>
+    </>
+);
+

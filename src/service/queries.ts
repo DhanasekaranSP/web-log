@@ -27,19 +27,3 @@ export const GET_POSTS = `
     }
   }
 `;
-
-export const GET_RECENT_POST = `
-    query GetPostDetails() {
-      posts(
-        orderBy: createdAt_ASC
-        last: 3
-      ) {
-        title
-        featuredImage {
-          url
-        }
-        createdAt
-        slug
-      }
-    }
-  `;

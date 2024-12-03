@@ -1,34 +1,31 @@
 import { useEffect, useState } from 'react';
-import { GraphQLClient } from 'graphql-request';
-import { PostsData, PostNode } from '../service/model';
-import { GET_POSTS } from '../service/queries';
+import { PostNode } from '../service/model';
 import { PostCard } from './PostCard';
 import { PostWidget } from './PostWidget';
 import { Categories } from './Categories';
+import { getPosts } from '../service/api';
+import Loader from './Loader';
 
 export const Layout = () => {
-
     const [posts, setPosts] = useState<PostNode[]>([]); // State with typed array of posts
     const [loading, setLoading] = useState<boolean>(true); // Loading state
     const [error, setError] = useState<string | null>(null); // Error state
 
     useEffect(() => {
-        const client = new GraphQLClient('https://ap-south-1.cdn.hygraph.com/content/cm3vuc0n703mb07w956nceuiv/master');
-        const fetchData = async () => {
+        const fetchPosts = async () => {
             try {
-                const data: PostsData = await client.request(GET_POSTS); // Fetching data with types
-                setPosts(data.postsConnection.edges.map(edge => edge.node)); // Map over edges to extract nodes
+                const result = await getPosts(); // Fetch posts using API function
+                setPosts(result);
                 setLoading(false);
             } catch (err) {
-                setError((err as Error).message); // Catching errors
+                setError((err as Error).message);
                 setLoading(false);
             }
         };
-
-        fetchData();
+        fetchPosts();
     }, []);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <Loader />;
     if (error) return <p>Error: {error}</p>;
 
     return (
